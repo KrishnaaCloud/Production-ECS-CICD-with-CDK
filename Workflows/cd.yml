@@ -1,0 +1,25 @@
+name: CD - Deploy to ECS (UAT)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, uat-ecs-runner]
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Configure AWS (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::ACCOUNT_ID:role/ecs-cd-role
+          aws-region: ap-south-1
+
+      - name: Deploy via CDK
+        run: |
+          cdk deploy UatApplicationStack \
+            --require-approval never \
+            --parameters ImageTag=${GITHUB_RUN_NUMBER}

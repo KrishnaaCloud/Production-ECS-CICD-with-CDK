@@ -1,0 +1,32 @@
+name: CI - Build & Push Image (UAT)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Configure AWS (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::ACCOUNT_ID:role/ecr-ci-role
+          aws-region: ap-south-1
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag and push image
+        run: |
+          docker build -t sample-api:${GITHUB_RUN_NUMBER} .
+          docker tag sample-api:${GITHUB_RUN_NUMBER} \
+            ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/sample-api:${GITHUB_RUN_NUMBER}
+          docker push ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/sample-api:${GITHUB_RUN_NUMBER}
