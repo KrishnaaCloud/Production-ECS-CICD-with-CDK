@@ -21,7 +21,7 @@ a containerized application to Amazon ECS using AWS CDK.
 - Uses ECS deployment circuit breaker with automatic rollback
 
 ## Deployment Safety
-- Versioned Docker images (no `latest`)
+- Versioned Docker images
 - ECS circuit breaker enabled
 - Rolling deployments via ECS
 
