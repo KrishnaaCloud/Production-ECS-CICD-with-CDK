@@ -25,4 +25,15 @@ a containerized application to Amazon ECS using AWS CDK.
 - ECS circuit breaker enabled
 - Rolling deployments via ECS
 
-This setup reflects real-world DevOps practices used in production systems.
+## Design Decisions & Trade-offs
+
+- ECS EC2 launch type was chosen instead of Fargate to allow more control over instance sizing and cost.
+- CI and CD pipelines are separated to minimize blast radius and improve security.
+- Self-hosted runner is used for deployments to avoid exposing high-privilege AWS roles.
+- Manual CD trigger is used to maintain deployment control in non-production environments.
+
+## Limitations & Future Improvements
+
+- Blue/green deployments can be added for zero-downtime releases.
+- Multi-environment (dev/prod) support can be implemented.
+- Additional monitoring and alerting can be integrated.
